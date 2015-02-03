@@ -8,6 +8,6 @@ namespace Liferarchy.Database
 {
     abstract class SQLDatabase
     {
-        abstract void connect();
+        public abstract void connect();
     }
 }
