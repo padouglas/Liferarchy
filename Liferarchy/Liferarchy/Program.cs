@@ -15,10 +15,8 @@ namespace Liferarchy
         [STAThread]
         static void Main()
         {
-            Debug.WriteLine("Main Form created");
-            string userAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            Debug.WriteLine("User application data folder is: " + userAppDataFolder);
-
+            Database.SQLiteDatabase database = new Database.SQLiteDatabase();
+ 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
