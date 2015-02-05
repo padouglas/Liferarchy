@@ -15,6 +15,7 @@ namespace Liferarchy
         [STAThread]
         static void Main()
         {
+            // Initialise the SQLite database
             Database.SQLiteDatabase database = new Database.SQLiteDatabase();
  
             Application.EnableVisualStyles();
