@@ -29,10 +29,17 @@ namespace Liferarchy.Database
         /// </summary>
         public override void connect()
         {
-            // Create (if needed) and connect to the SQLite database file
-            createDatabaseFileIfNecessary();
+            // Connect to the database
             string connectionString = String.Format("Data Source={0};Version=3;", fileName);
-            dbConnection = new SQLiteConnection(connectionString);          
+            try
+            {
+                dbConnection = new SQLiteConnection(connectionString);
+                dbConnection.Open();
+            }
+            catch(SQLiteException)
+            {
+                Debug.WriteLine("Failed to connect to the database");
+            }
         }
 
         /// <summary>
