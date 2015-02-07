@@ -17,6 +17,7 @@ namespace Liferarchy
         {
             // Initialise the SQLite database
             Database.SQLiteDatabase database = new Database.SQLiteDatabase();
+            Debug.WriteLine("SQLite version is: " + database.GetDatabaseVersion());
  
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

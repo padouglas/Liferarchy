@@ -13,55 +13,61 @@ namespace Liferarchy.Database
 {
     class SQLiteDatabase : SQLDatabase
     {
-        private SQLiteConnection dbConnection;
-        private string fileName;
+        private string FileName;
         
         /// <summary>
         /// Default constructor: initialise the database
         /// </summary>
         public SQLiteDatabase()
         {
-            connect();
+            CreateDatabaseFileIfNecessary();
         }
 
         /// <summary>
-        /// Connect to the SQLite database file
+        /// Get the SQLite version
         /// </summary>
-        public override void connect()
+        public override string GetDatabaseVersion()
         {
-            // Connect to the database
-            string connectionString = String.Format("Data Source={0};Version=3;", fileName);
-            try
+            SQLiteConnection databaseConnection;
+            string connectionString = String.Format("Data Source={0};Version=3;", FileName);
+            string version = null;
+
+            using (databaseConnection = new SQLiteConnection(connectionString))
             {
-                dbConnection = new SQLiteConnection(connectionString);
-                dbConnection.Open();
+                databaseConnection.Open();
+
+                using (SQLiteCommand command = new SQLiteCommand(databaseConnection))
+                {
+                    command.CommandText = "SELECT SQLITE_VERSION()";
+                    version = Convert.ToString(command.ExecuteScalar());
+                }
+
+                databaseConnection.Close();
             }
-            catch(SQLiteException)
-            {
-                Debug.WriteLine("Failed to connect to the database");
-            }
+
+            return version;
         }
 
         /// <summary>
         /// If the SQLite database file does not exist, then create it in the
         /// user local application directory.
         /// </summary>
-        private void createDatabaseFileIfNecessary()
+        private void CreateDatabaseFileIfNecessary()
         {
             string userAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             Debug.WriteLine(String.Format("User application data folder is: {0}", userAppDataFolder));
 
             string dirName = userAppDataFolder + "\\" + SystemConstants.ProgramName;
-            fileName = dirName + "\\" + SystemConstants.SQLiteDatabaseName;
-            Debug.WriteLine(String.Format("Filename is: {0}", fileName));
+            FileName = dirName + "\\" + SystemConstants.SQLiteDatabaseName;
+            Debug.WriteLine(String.Format("Filename is: {0}", FileName));
 
             if (!Directory.Exists(dirName))
             {
                 Directory.CreateDirectory(dirName);
             }
-            if (!File.Exists(fileName))
+            if (!File.Exists(FileName))
             {
-                SQLiteConnection.CreateFile(fileName);
+                SQLiteConnection.CreateFile(FileName);
             }
         }
 
