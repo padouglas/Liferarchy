@@ -26,6 +26,7 @@ namespace Liferarchy.Database
         {
             CreateDatabaseFileIfNecessary();
             ConnectionString = String.Format("Data Source={0};Version=3;", FileName);
+            CreateTablesIfNecessary();
         }
 
         /// <summary>
@@ -53,8 +54,28 @@ namespace Liferarchy.Database
             return version;
         }
 
-        public override void CreateTables()
+        /// <summary>
+        /// Create the Liferarcy tables in the SQLite database
+        /// </summary>
+        public override void CreateTablesIfNecessary()
         {
+            SQLiteConnection databaseConnection;
+
+            using (databaseConnection = new SQLiteConnection(ConnectionString))
+            {
+                databaseConnection.Open();
+
+                using (SQLiteCommand command = new SQLiteCommand(databaseConnection))
+                {
+                    command.CommandText = "DROP TABLE IF EXISTS Goals";
+                    command.ExecuteNonQuery();
+                    command.CommandText = @"CREATE TABLE Goals(id INTEGER PRIMARY KEY, 
+                        Name TEXT, Description TEXT)";
+                    command.ExecuteNonQuery();
+                }
+            
+                databaseConnection.Close();
+            }
 
         }
 
@@ -79,6 +100,7 @@ namespace Liferarchy.Database
             {
                 SQLiteConnection.CreateFile(FileName);
             }
+
         }
 
      }

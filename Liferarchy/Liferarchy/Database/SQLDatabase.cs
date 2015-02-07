@@ -10,6 +10,6 @@ namespace Liferarchy.Database
     {
         public abstract string GetDatabaseVersion();
 
-        public abstract void CreateTables();
+        public abstract void CreateTablesIfNecessary();
     }
 }
