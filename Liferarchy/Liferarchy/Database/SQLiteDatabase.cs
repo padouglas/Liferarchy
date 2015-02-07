@@ -11,28 +11,33 @@ using System.Data.SQLite;
 
 namespace Liferarchy.Database
 {
+    /// <summary>
+    /// SQLite database interactions
+    /// </summary>
     class SQLiteDatabase : SQLDatabase
     {
-        private string FileName;
-        
+        private string FileName {get; set;}
+        private string ConnectionString {get; set;}
+
         /// <summary>
         /// Default constructor: initialise the database
         /// </summary>
         public SQLiteDatabase()
         {
             CreateDatabaseFileIfNecessary();
+            ConnectionString = String.Format("Data Source={0};Version=3;", FileName);
         }
 
         /// <summary>
         /// Get the SQLite version
         /// </summary>
+        /// <returns>String containing the SQLite version</returns>
         public override string GetDatabaseVersion()
         {
             SQLiteConnection databaseConnection;
-            string connectionString = String.Format("Data Source={0};Version=3;", FileName);
             string version = null;
 
-            using (databaseConnection = new SQLiteConnection(connectionString))
+            using (databaseConnection = new SQLiteConnection(ConnectionString))
             {
                 databaseConnection.Open();
 
@@ -46,6 +51,11 @@ namespace Liferarchy.Database
             }
 
             return version;
+        }
+
+        public override void CreateTables()
+        {
+
         }
 
         /// <summary>

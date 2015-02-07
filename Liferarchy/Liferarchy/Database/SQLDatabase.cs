@@ -9,5 +9,7 @@ namespace Liferarchy.Database
     abstract class SQLDatabase
     {
         public abstract string GetDatabaseVersion();
+
+        public abstract void CreateTables();
     }
 }
